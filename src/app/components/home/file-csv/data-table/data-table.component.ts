@@ -2,7 +2,8 @@
   falta pulir cosas de la interfaz, como que pase de un campo editable al siguiente cuando se pulsa el tabulador
   o que al crear un nuevo campo se puedan llenar los valores nuevos más fácil
   corregir el margen derecho con las css
-*/import { Component, Input, OnInit } from '@angular/core';
+*/import { DatePipe } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
 import { faPlus,  faFileCsv, faSave } from '@fortawesome/free-solid-svg-icons';
 import { FileTxt } from 'src/app/models/FileTxt';
 import { CsvParserService } from 'src/app/services/csv-parser.service';
@@ -34,7 +35,7 @@ export class DataTableComponent implements OnInit {
   //regex patter for inputs
   pattern: string = "[a-zA-Z0-9\n ]+";
 
-  constructor(private _csvParserService: CsvParserService, private _fileService: FileService) { }
+  constructor(private _csvParserService: CsvParserService, private _fileService: FileService, private _datePipe: DatePipe) { }
 
   ngOnInit(): void {
   }
@@ -138,7 +139,7 @@ export class DataTableComponent implements OnInit {
   }
 
   private sendFileTxtToAPI(csvTxt: string){
-    const fileTxt = new FileTxt("csv"+Date.now().toLocaleString(), btoa(csvTxt));
+    const fileTxt = new FileTxt("csv"+this._datePipe.transform(Date.now(),"MMM dd Y HH:mm:ss"), btoa(csvTxt));
 
     this._fileService.postFileTxt(fileTxt).subscribe(res=>{
       if(res == 1){
