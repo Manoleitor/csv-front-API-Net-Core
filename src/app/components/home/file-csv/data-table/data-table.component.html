@@ -1,0 +1,34 @@
+
+<table class="table table-light" *ngIf="tableData != null">
+    <thead>
+        <tr>
+            <th *ngFor="let c of tableData[0]"> {{c}}</th>            
+            <th [hidden]="!editingTable" >
+                <input [hidden]="tmpColumn[0]!=''" type="text" [id]="newValueInputFieldId + 0" placeholder="new column name" (keydown)="onKeyDown($event)" (keydown.enter)="saveField(0)" >
+                <div [hidden]="tmpColumn[0]==''">{{tmpColumn[0]}}</div>
+            </th>
+            <th>
+                <fa-icon [icon]="faPlus" *ngIf="!creatingColumn && !editingTable" (click)="addColumnClick()"></fa-icon>
+                <fa-icon [icon]="faSave" *ngIf="editingTable && tmpColumn[0]!=''" (click)="saveColumnClick()"></fa-icon>
+            </th>
+            <th *ngIf="!creatingColumn && !editingTable">
+                <div  (click)="makeCsv()">
+                    <fa-icon [icon]="faFileCsv"></fa-icon>
+                </div>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of tableData | slice: 1 ; let i = index">
+            <td *ngFor="let e of row; let j = index" (dblclick)="editingField(i+1, j)">
+                <div *ngIf="isEditingField(i+1, j)==false">{{e}}</div>
+                <input *ngIf="isEditingField(i+1, j)" pattern="[a-zA-Z0-9]+" type="text" #fieldEdited (keydown)="onKeyDown($event)" (keydown.enter)="changeValueField(i+1, j, fieldEdited.value)" [value]=e >
+            </td>
+            <td *ngIf="creatingColumn" >
+                <input *ngIf="tmpColumn[i+1] == ''" pattern="[a-zA-Z0-9]+" type="text" (keydown)="onKeyDown($event)" (keydown.enter)="saveField(i+1)" [id]="newValueInputFieldId + (i + 1)"> 
+                <div *ngIf="tmpColumn[i+1] != ''">{{tmpColumn[i + 1]}}</div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div *ngIf="isLastRowEmpty()==false" class="btn btn-success" (click)="addRow()">Add row</div>

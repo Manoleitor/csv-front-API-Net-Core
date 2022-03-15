@@ -1,0 +1,3 @@
+<h1 class="mt-4">Tratar .CSV</h1>
+    <app-upload-file (dataEvent)= "receiveData($event)"></app-upload-file>
+    <app-data-table *ngIf="data != null" [tableData]="data"></app-data-table>
